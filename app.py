@@ -37,7 +37,7 @@ with st.sidebar:
     st.header("🔐 VIP Activation / Kích hoạt VIP")
     user_code = st.text_input("Enter VIP Code / Nhập mã VIP:", type="password")
     st.markdown("---")
-    st.info("💡 **Contact Zalo/Telegram:**\n\n**0827.155.093**")
+    st.info("💡 **Contact Zalo/Telegram:**\n\n**0827.155.093/0386.600.108**")
 
 if user_code not in VALID_VIP_CODES:
     st.warning("🔒 Please enter your **VIP Activation Code** in the sidebar to unlock the system. / Vui lòng nhập mã VIP để mở khóa hệ thống.")
