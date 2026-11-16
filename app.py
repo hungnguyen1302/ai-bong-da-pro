@@ -41,6 +41,22 @@ if user_code not in VALID_VIP_CODES:
 st.success("✅ Đã kích hoạt bản quyền VIP!")
 
 @st.cache_data(ttl=3600)
+def get_active_groq_model():
+    models = client.models.list().data
+    chat_models = [
+        m.id for m in models 
+        if "whisper" not in m.id.lower() 
+        and "guard" not in m.id.lower() 
+        and "tts" not in m.id.lower()
+        and "embed" not in m.id.lower()
+    ]
+    for preferred in ["llama", "gpt", "qwen", "gemma", "deepseek", "mixtral"]:
+        for m_id in chat_models:
+            if preferred in m_id.lower():
+                return m_id
+    return chat_models[0] if chat_models else "llama-3.1-8b-instant"
+
+@st.cache_data(ttl=3600)
 def get_matches(league_code):
     url = f"https://api.football-data.org/v4/competitions/{league_code}/matches?status=SCHEDULED"
     res = requests.get(url, headers=HEADERS)
@@ -73,6 +89,7 @@ if matches:
     if st.button("🚀 Phân tích trận đấu ngay", type="primary", use_container_width=True):
         with st.spinner("AI đang phân tích dữ liệu trận đấu..."):
             standings_text = get_standings(league_code)
+            active_model = get_active_groq_model()
             prompt = f"""
             Phân tích trận đấu: {match_data['homeTeam']['name']} (Chủ nhà) vs {match_data['awayTeam']['name']} (Khách).
             Giải: {selected_league} - Vòng {match_data.get('matchday', 'N/A')}
@@ -85,7 +102,7 @@ if matches:
                     {"role": "system", "content": "Bạn là Chuyên gia Phân tích Chiến thuật Bóng đá. Hãy phân tích trận đấu theo 4 mục: 1. Tương quan lực lượng & Phong độ; 2. Điểm nóng chiến thuật; 3. Thống kê then chốt; 4. Kịch bản & Dự đoán tỷ số. Trình bày sắc bén bằng tiếng Việt."},
                     {"role": "user", "content": prompt}
                 ],
-                model="llama-3.1-8b-instant",
+                model=active_model,
                 temperature=0.6
             )
             st.markdown("---")
