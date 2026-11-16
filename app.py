@@ -85,7 +85,7 @@ if matches:
                     {"role": "system", "content": "Bạn là Chuyên gia Phân tích Chiến thuật Bóng đá. Hãy phân tích trận đấu theo 4 mục: 1. Tương quan lực lượng & Phong độ; 2. Điểm nóng chiến thuật; 3. Thống kê then chốt; 4. Kịch bản & Dự đoán tỷ số. Trình bày sắc bén bằng tiếng Việt."},
                     {"role": "user", "content": prompt}
                 ],
-                model="llama-3.3-70b-versatile",
+                model="llama-3.1-8b-instant",
                 temperature=0.6
             )
             st.markdown("---")
